@@ -1,16 +1,30 @@
-# This is a sample Python script.
+import torch
+import torchvision
+from torch.utils import data
+from torchvision import transforms
+from d2l import torch as d2l
+import matplotlib
+matplotlib.use('TkAgg')
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+trans = transforms.ToTensor()
+mnist_train = torchvision.datasets.FashionMNIST(
+    root="data", train=True, transform=trans, download=True)
+mnist_test = torchvision.datasets.FashionMNIST(
+    root="data", train=False, transform=trans, download=True)
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # 读取小批量
+    batch_size = 256
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+    def get_dataloader_workers():  # @save
+        """使用4个进程来读取数据"""
+        return 4
+
+
+    train_iter = data.DataLoader(mnist_train, batch_size, shuffle=True,
+                                 num_workers=get_dataloader_workers())
+    timer = d2l.Timer()
+    for X, y in train_iter:
+        continue
+    print(f'{timer.stop():.2f} sec')
