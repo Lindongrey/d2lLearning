@@ -63,6 +63,15 @@ class Animator:  #@save
         display.clear_output(wait=True)
 
 
+"""
+784 个像素
+↓ 同时喂给 10 条线性式
+得到 10 个分数
+↓ softmax
+得到 10 个概率
+↓ argmax
+得到最终类别编号
+"""
 # 获取图片
 batch_size = 256
 train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)
@@ -70,7 +79,7 @@ train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)
 # 初始化参数
 # 28 * 28 个像素
 num_inputs = 784
-# 十个类型
+# 衣服的十个类型
 num_outputs = 10
 W = torch.normal(0, 0.01, size=(num_inputs, num_outputs), requires_grad=True)
 b = torch.zeros(num_outputs, requires_grad=True)
@@ -106,11 +115,12 @@ y_hat = torch.tensor([[0.1, 0.3, 0.6], [0.3, 0.2, 0.5]])
 
 
 # 计算损失，取负对数
+# 这一步的下一步是后面的 updater
 def cross_entropy(y_hat, y):
     return - torch.log(y_hat[range(len(y_hat)), y])
 
 
-# 计算分类精度，看看一批 256 张图里猜对几张图
+# 计算分类精度，把概率转化为对或错的结果
 def accuracy(y_hat, y):  #@save
     """计算预测正确的数量"""
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
@@ -120,8 +130,8 @@ def accuracy(y_hat, y):  #@save
     return float(cmp.type(y.dtype).sum())
 
 
-# 评估精度
-def evaluate_accuracy(net, data_iter):  #@save
+# 评估精度，用上面这个函数看看一批 256 张图里猜对几张图
+def evaluate_accuracy(net, data_iter):  # @save
     """计算在指定数据集上模型的精度"""
     if isinstance(net, torch.nn.Module):
         net.eval()  # 将模型设置为评估模式
@@ -133,7 +143,7 @@ def evaluate_accuracy(net, data_iter):  #@save
 
 
 # 一个训练周期
-def train_epoch_ch3(net, train_iter, loss, updater):  #@save
+def train_epoch_ch3(net, train_iter, loss, updater):  # @save
     """训练模型一个迭代周期（定义见第3章）"""
     # 将模型设置为训练模式
     if isinstance(net, torch.nn.Module):
@@ -159,7 +169,7 @@ def train_epoch_ch3(net, train_iter, loss, updater):  #@save
 
 
 # 重复训练
-def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):  #@save
+def train_ch3(net, train_iter, test_iter, loss, num_epochs, updater):  # @save
     """训练模型（定义见第3章）"""
     animator = Animator(xlabel='epoch', xlim=[1, num_epochs], ylim=[0.3, 0.9],
                         legend=['train loss', 'train acc', 'test acc'])
@@ -185,7 +195,8 @@ num_epochs = 6
 train_ch3(net, train_iter, test_iter, cross_entropy, num_epochs, updater)
 
 
-def predict_ch3(net, test_iter, n=6):  #@save
+# 应用到测试集去分类，抽几个图片展示成果
+def predict_ch3(net, test_iter, n=6):  # @save
     """预测标签（定义见第3章）"""
     for X, y in test_iter:
         break
