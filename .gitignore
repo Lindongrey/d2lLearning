@@ -1,1 +1,51 @@
 **/data/
+
+# =============== Python ===============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# =============== PyCharm / IntelliJ ===============
+.idea/
+*.iml
+
+# =============== CSV（按需要微调） ===============
+*.csv
+
+# =============== OS 垃圾 ===============
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =============== 日志 & 本地配置 ===============
+*.log
+*.sqlite
+*.db
+.env
+*.env.local
+settings_local.py
